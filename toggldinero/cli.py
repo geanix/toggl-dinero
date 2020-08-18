@@ -20,7 +20,13 @@ It can be used as a handy facility for running the task from a command line.
 """
 import logging
 import click
+from datetime import datetime, timedelta
+import calendar
+import json
 from .__init__ import __version__
+
+from .toggl import TogglAPI
+from .dinero import DineroAPI
 
 LOGGING_LEVELS = {
     0: logging.NOTSET,
@@ -69,13 +75,155 @@ def cli(info: Info, verbose: int):
 
 
 @cli.command()
-@pass_info
-def hello(_: Info):
-    """Say 'hello' to the nice people."""
-    click.echo("toggldinero says 'hello'")
-
-
-@cli.command()
 def version():
     """Get the library version."""
     click.echo(click.style(f"{__version__}", bold=True))
+
+
+def since_until(period):
+    today = datetime.today()
+    if period == 'today':
+        return today, today
+    elif period == 'yesterday':
+        yesterday = today - timedelta(days=1)
+        return yesterday, yesterday
+    elif period == 'this-week':
+        start_of_week = today - timedelta(days=today.weekday())
+        end_of_week = today + timedelta(day=(6-today.weekday))
+        return start_of_week, end_of_week
+    elif period == 'last-week':
+        start_of_week = today - timedelta(days=7+today.weekday())
+        end_of_week = today + timedelta(days=(6-today.weekday)-7)
+        return start_of_week, end_of_week
+    elif period == 'this-month':
+        start_of_month = today.replace(day=1)
+        last_day_of_month = calendar.monthrange(today.year, today.month)[1]
+        end_of_month = today.replace(day=last_day_of_month)
+        return start_of_month, end_of_month
+    elif period == 'last-month':
+        end_of_month = today - timedelta(days=today.day)
+        start_of_month = end_of_month.replace(day=1)
+        return start_of_month, end_of_month
+    elif period == 'this-year':
+        start_of_year = today.replace(month=1, day=1)
+        return start_of_year, today
+    elif period == 'last-year':
+        end_of_year = today.replace(month=1, day=1) - timedelta(days=1)
+        start_of_year = end_of_year.replace(month=1, day=1)
+        return start_of_year, end_of_year
+
+
+@cli.command()
+@click.argument('client')
+@click.argument('period',
+                type=click.Choice(['today', 'yesterday',
+                                   'this-week', 'last-week',
+                                   'this-month', 'last-month',
+                                   'this-year', 'last-year']),
+                default='this-month')
+@click.option('--toggl-api-token', envvar='TOGGL_API_TOKEN')
+@click.option('--workspace', envvar='TOGGL_WORKSPACE')
+@click.option('--billable', type=click.Choice(['yes', 'no', 'both']),
+              default='yes')
+@click.option('--rounding/--no-rounding', default=True, is_flag=True)
+@click.option('--display-hours', type=click.Choice(['decimal', 'minutes']),
+              default='decimal')
+@click.option('--language', type=click.Choice(['da', 'en']),
+              default='da')
+@click.option('--dinero-client-id', envvar='DINERO_CLIENT_ID')
+@click.option('--dinero-client-secret', envvar='DINERO_CLIENT_SECRET')
+@click.option('--dinero-api-key', envvar='DINERO_API_KEY')
+@click.option('--dinero-organization', envvar='DINERO_ORGANIZATION')
+def invoice(client, period, toggl_api_token, workspace,
+            billable, rounding, display_hours, language,
+            dinero_client_id, dinero_client_secret,
+            dinero_api_key, dinero_organization):
+    toggl = TogglAPI(toggl_api_token)
+    client_id = toggl.client_id(client)
+    workspace_id = toggl.workspace_id(workspace)
+    since, until = since_until(period)
+    data = {
+        'workspace_id': workspace_id,
+        'client_ids': client_id,
+        'since': since.strftime('%Y-%m-%d'),
+        'until': until.strftime('%Y-%m-%d'),
+        'billable': billable,
+        'rounding': "on" if rounding else "off",
+        'display_hours': display_hours,
+    }
+
+    report = toggl.get_summary_report(data, f'{client}_report.pdf')
+    invoice_currency = None
+    invoice_lines = []
+    period = f"{since.strftime('%Y-%m-%d')} - {until.strftime('%Y-%m-%d')}"
+    if language == 'da':
+        header = f'Konsulent ydelser: {period}'
+    else:
+        header = f'Consultancy services: {period}'
+    invoice_lines.append({'Description': header, 'LineType': 'Text'})
+
+    for project in report['data']:
+        project_name = project['title']['project']
+        assert len(project['total_currencies']) == 1
+        currency = project['total_currencies'][0]['currency']
+        if invoice_currency is None:
+            invoice_currency = currency
+        else:
+            assert currency == invoice_currency
+
+        for item in project['items']:
+            assert item['cur'] == currency
+            rate = item['rate']
+            ms = item['time']
+            hours = ms / (1000 * 60 * 60)
+            # round to 2 decimals
+            hours = int((hours * 100) + 0.5) / 100
+            description = item['title']['time_entry']
+            invoice_lines.append({
+                'Description': f"{project_name}: {description}",
+                'AccountNumber': 1000,
+                'Quantity': hours,
+                'Unit': 'hours',
+                'BaseAmountValue': rate,
+            })
+
+    dinero = DineroAPI(dinero_client_id, dinero_client_secret, dinero_api_key,
+                       dinero_organization)
+    contact = dinero.contact_with_external_reference('toggl', client_id)
+    if not contact:
+        click.echo(f'Error: Could not find linked Dinero contact: {client_id}')
+        return False
+    dinero.create_invoice(contact, invoice_lines, currency=invoice_currency,
+                          language=language)
+
+
+@cli.command()
+@click.argument('toggl-client')
+@click.argument('dinero-contact')
+@click.option('--toggl-api-token', envvar='TOGGL_API_TOKEN')
+@click.option('--dinero-client-id', envvar='DINERO_CLIENT_ID')
+@click.option('--dinero-client-secret', envvar='DINERO_CLIENT_SECRET')
+@click.option('--dinero-api-key', envvar='DINERO_API_KEY')
+@click.option('--dinero-organization', envvar='DINERO_ORGANIZATION')
+def link(toggl_client, dinero_contact,
+         toggl_api_token,
+         dinero_client_id, dinero_client_secret,
+         dinero_api_key, dinero_organization):
+    toggl = TogglAPI(toggl_api_token)
+    dinero = DineroAPI(dinero_client_id, dinero_client_secret, dinero_api_key,
+                       dinero_organization)
+    client_id = toggl.client_id(toggl_client)
+    if not client_id:
+        click.echo(f'Error: Toggl client not found: {toggl_client}')
+    contact_id = dinero.contact_id(dinero_organization, dinero_contact)
+    if not contact_id:
+        click.echo(f'Error: Dinero contact not found: {dinero_contact}')
+    contact = dinero.get_contact(dinero_organization, contact_id).json()
+    extref = contact.get('ExternalReference')
+    if extref is not None:
+        extref = json.loads(extref)
+    else:
+        extref = {}
+    extref['toggl'] = client_id
+    contact['ExternalReference'] = json.dumps(extref)
+    dinero.update_contact(dinero_organization, contact_id, contact)

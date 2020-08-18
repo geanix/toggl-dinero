@@ -1,6 +1,7 @@
 # toggldinero
 
-Dinero invoicing from Toggl time entries.
+Create invoices in [Dinero](https://dinero.dk) from [Toggl](https://toggl.com)
+time entries.
 
 ## Project Features
 
@@ -41,7 +42,7 @@ See also the list of [contributors](https://github.com/esben/toggldinero/contrib
 
 ## LicenseMIT License
 
-Copyright (c) esben
+Copyright (c)  Geanix ApS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -35,7 +35,6 @@ docs: coverage
 	mkdir -p docs/source/_static
 	mkdir -p docs/source/_templates
 	cd docs && $(MAKE) html
-	
 
 answers:
 	cd docs && $(MAKE) html

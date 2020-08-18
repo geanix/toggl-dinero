@@ -1,3 +1,3 @@
-toggldinero
+TogglDinero
 
-Dinero invoicing from Toggl time entries.
+Create invoices in Dinero from Toggl time entries.

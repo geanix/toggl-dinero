@@ -49,7 +49,10 @@ setup(
     version=version,
     install_requires=[
         # Include dependencies here
-        'click>=7.0,<8'
+        'click>=7.0,<8',
+        'TogglPy>=0.1.1',
+        'oauthlib>=3.1.0',
+        'requests-oauthlib>=1.3.0',
     ],
     entry_points="""
     [console_scripts]
