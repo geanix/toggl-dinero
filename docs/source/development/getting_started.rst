@@ -14,13 +14,13 @@ steps from top to bottom you should be ready to roll by the end.
 Get the Source
 ==============
 
-The source code for the `TogglDinero` project lives at
-`github <https://github.com/esben/TogglDinero>`_.  
+The source code for the `toggl-dinero` project lives at
+`github <https://github.com/geanix/toggl-dinero>`_.  
 You can use `git clone` to get it.
 
 .. code-block:: bash
 
-   git clone https://github.com/patdaburu/bnrml
+   git clone https://github.com/geanix/toggl-dinero
 
 Create the Virtual Environment
 ==============================

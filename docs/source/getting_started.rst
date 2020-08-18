@@ -10,11 +10,11 @@ Getting Started
 Installing the Library
 ======================
 
-You can use pip to install `toggldinero`.
+You can use pip to install `toggl-dinero`.
 
 .. code-block:: sh
 
-    pip install toggldinero
+    pip install toggl-dinero
 
 
 

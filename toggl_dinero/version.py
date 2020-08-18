@@ -4,7 +4,7 @@
 """
 This module contains project version information.
 
-.. currentmodule:: toggldinero.version
+.. currentmodule:: toggl_dinero.version
 .. moduleauthor:: Esben Haabendal <esben@geanix.com>
 """
 

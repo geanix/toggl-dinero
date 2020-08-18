@@ -1,11 +1,11 @@
-# toggldinero
+# toggl-dinero
 
 Create invoices in [Dinero](https://dinero.dk) from [Toggl](https://toggl.com)
 time entries.
 
 ## Project Features
 
-* [toggldinero](http://TogglDinero.readthedocs.io/)
+* [toggl-dinero](http://toggl-dinero.readthedocs.io/)
 * a starter [Click](http://click.pocoo.org/5/) command-line application
 * automated unit tests you can run with [pytest](https://docs.pytest.org/en/latest/)
 * a [Sphinx](http://www.sphinx-doc.org/en/master/) documentation project
@@ -13,7 +13,7 @@ time entries.
 ## Getting Started
 
 The project's documentation contains a section to help you
-[get started](https://TogglDinero.readthedocs.io/en/latest/getting_started.html) as a developer or
+[get started](https://toggl-dinero.readthedocs.io/en/latest/getting_started.html) as a developer or
 user of the library.
 
 ## Development Prerequisites
@@ -27,7 +27,7 @@ If you're going to be working in the code (rather than just using the library), 
 
 Below are some handy resource links.
 
-* [Project Documentation](http://TogglDinero.readthedocs.io/)
+* [Project Documentation](http://toggl-dinero.readthedocs.io/)
 * [Click](http://click.pocoo.org/5/) is a Python package for creating beautiful command line interfaces in a composable way with as little code as necessary.
 * [Sphinx](http://www.sphinx-doc.org/en/master/) is a tool that makes it easy to create intelligent and beautiful documentation, written by Geog Brandl and licnsed under the BSD license.
 * [pytest](https://docs.pytest.org/en/latest/) helps you write better programs.
@@ -38,9 +38,13 @@ Below are some handy resource links.
 
 * **Esben Haabendal** - *Initial work* - [github](https://github.com/esben)
 
-See also the list of [contributors](https://github.com/esben/toggldinero/contributors) who participated in this project.
+See also the list of
+[contributors](https://github.com/geanix/toggl-dinero/contributors) who
+participated in this project.
 
-## LicenseMIT License
+## License
+
+MIT License
 
 Copyright (c)  Geanix ApS
 

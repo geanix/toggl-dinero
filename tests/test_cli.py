@@ -9,8 +9,8 @@ This is the test module for the project's command-line interface (CLI)
 module.
 """
 # fmt: off
-import toggldinero.cli as cli
-from toggldinero import __version__
+import toggl_dinero.cli as cli
+from toggl_dinero import __version__
 # fmt: on
 from click.testing import CliRunner, Result
 
@@ -51,6 +51,6 @@ def test_hello_displays_expected_message():
     runner: CliRunner = CliRunner()
     result: Result = runner.invoke(cli.cli, ["hello"])
     # fmt: off
-    assert 'toggldinero' in result.output.strip(), \
+    assert 'toggl-dinero' in result.output.strip(), \
         "'Hello' messages should contain the CLI name."
     # fmt: on

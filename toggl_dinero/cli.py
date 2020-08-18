@@ -15,7 +15,7 @@ It can be used as a handy facility for running the task from a command line.
     To learn more about running Luigi, visit the Luigi project's
     `Read-The-Docs <http://luigi.readthedocs.io/en/stable/>`_ page.
 
-.. currentmodule:: toggldinero.cli
+.. currentmodule:: toggl_dinero.cli
 .. moduleauthor:: Esben Haabendal <esben@geanix.com>
 """
 import logging
@@ -52,11 +52,11 @@ pass_info = click.make_pass_decorator(Info, ensure=True)
 
 # Change the options to below to suit the actual options for your task (or
 # tasks).
-@click.group()
+@click.group(name='toggl-dinero')
 @click.option("--verbose", "-v", count=True, help="Enable verbose output.")
 @pass_info
 def cli(info: Info, verbose: int):
-    """Run toggldinero."""
+    """Run toggl-dinero."""
     # Use the verbosity count to determine the logging level...
     if verbose > 0:
         logging.basicConfig(

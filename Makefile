@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build
 .PHONY: build publish package coverage test lint docs venv
-PROJ_SLUG = toggldinero
-CLI_NAME = toggldinero
+PROJ_SLUG = toggl_dinero
+CLI_NAME = toggl-dinero
 PY_VERSION = 3.7
 LINTER = flake8
 

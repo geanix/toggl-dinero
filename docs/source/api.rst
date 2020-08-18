@@ -6,7 +6,7 @@
 API Documentation
 =================
 
-.. automodule:: toggldinero
+.. automodule:: toggl_dinero
     :members:
     :undoc-members:
     :show-inheritance:

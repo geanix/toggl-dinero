@@ -4,7 +4,7 @@
 """
 Dinero invoicing from Toggl time entries.
 
-.. currentmodule:: toggldinero
+.. currentmodule:: toggl_dinero
 .. moduleauthor:: Esben Haabendal <esben@geanix.com>
 """
 

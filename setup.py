@@ -26,7 +26,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 vspec = importlib.util.spec_from_file_location(
   "version",
   str(Path(__file__).resolve().parent /
-      'toggldinero'/"version.py")
+      'toggl_dinero'/"version.py")
 )
 vmod = importlib.util.module_from_spec(vspec)
 vspec.loader.exec_module(vmod)
@@ -41,7 +41,7 @@ if os.getenv('buildnum') is not None:
     )
 
 setup(
-    name='TogglDinero',
+    name='toggl-dinero',
     description="Dinero invoicing from Toggl time entries.",
     long_description=long_description,
     packages=find_packages(
@@ -56,17 +56,17 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    toggldinero=toggldinero.cli:cli
+    toggl-dinero=toggl_dinero.cli:cli
     """,
     python_requires=">=0.0.1",
     license='MIT',  # noqa
     author='Esben Haabendal',
     author_email='esben@geanix.com',
     # Use the URL to the github repo.
-    url= 'https://github.com/esben/toggldinero',
+    url= 'https://github.com/geanix/toggl-dinero',
     download_url=(
-        f'https://github.com/esben/'
-        f'toggldinero/archive/{version}.tar.gz'
+        f'https://github.com/geanix/'
+        f'toggl-dinero/archive/{version}.tar.gz'
     ),
     keywords=[
         # Add package keywords here.
