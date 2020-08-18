@@ -43,14 +43,27 @@ def test_verbose_output():
     ), "Verbose logging should be indicated in output."
 
 
-def test_hello_displays_expected_message():
+def test_invoice_help():
     """
-    Arrange/Act: Run the `version` subcommand.
-    Assert:  The output matches the library version.
+    Arrange/Act: Run the `invoice --help` subcommand.
+    Assert:  The first line of output looks right.
     """
     runner: CliRunner = CliRunner()
-    result: Result = runner.invoke(cli.cli, ["hello"])
+    result: Result = runner.invoke(cli.cli, ["invoice", "--help"])
     # fmt: off
-    assert 'toggl-dinero' in result.output.strip(), \
-        "'Hello' messages should contain the CLI name."
+    assert 'Usage: toggl-dinero invoice' in result.output.strip(), \
+        "Help message should contain the command and subcommand name."
+    # fmt: on
+
+
+def test_link_help():
+    """
+    Arrange/Act: Run the `link --help` subcommand.
+    Assert:  The first line of output looks right.
+    """
+    runner: CliRunner = CliRunner()
+    result: Result = runner.invoke(cli.cli, ["link", "--help"])
+    # fmt: off
+    assert 'Usage: toggl-dinero link' in result.output.strip(), \
+        "Help message should contain the command and subcommand name."
     # fmt: on
