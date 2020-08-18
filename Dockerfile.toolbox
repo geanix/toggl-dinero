@@ -1,0 +1,14 @@
+FROM python:3.7
+
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+# Allow password-less sudo
+RUN apt-get update -qq \
+ && apt-get install -qq -y sudo \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && echo '%sudo ALL=(ALL:ALL) NOPASSWD:ALL' > /etc/sudoers.d/toolbox
+
+LABEL com.github.containers.toolbox="true" \
+      com.github.debarshiray.toolbox="true
