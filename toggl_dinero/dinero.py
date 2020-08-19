@@ -3,6 +3,7 @@
 from oauthlib.oauth2 import LegacyApplicationClient
 from requests_oauthlib import OAuth2Session
 import json
+import logging
 
 # Dinero invoice creation procedure
 #
@@ -136,7 +137,8 @@ class DineroAPI:
             extref = c.get('ExternalReference')
             try:
                 extref = json.loads(extref)
-            except:
+            except Exception as e:
+                logging.warn(f'Bad ExternalReference value: {e}')
                 return None
             if extref.get(key) == value:
                 return c['contactGuid']
