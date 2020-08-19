@@ -26,21 +26,19 @@ Runtime Dependencies and Licenses
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
 | Click              | 7.0     | BSD                                  | https://palletsprojects.com/p/click/              |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| bleach             | 3.1.0   | Apache Software License              | https://github.com/mozilla/bleach                 |
+| TogglPy            | 0.1.1   | MIT                                  | https://github.com/matthewdowney/TogglPy          |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| filelock           | 3.0.12  | Public Domain <http://unlicense.org> | https://github.com/benediktschmitt/py-filelock    |
+| oauthlib           | 3.1.0   | BSD                                  | https://github.com/oauthlib/oauthlib              |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| frozenordereddict  | 1.2.0   | MIT                                  | https://github.com/wsmith323/frozenordereddict    |
+| requests-oauthlib  | 1.2.0   | ISC                                  | https://github.com/requests/requests-oauthlib     |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| importlib-metadata | 0.18    | Apache Software License              | http://importlib-metadata.readthedocs.io/         |
+| requests           | 2.24.0  | Apache License, Version 2.0          | http://github.com/psf/requests                    |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| readme-renderer    | 24.0    | Apache License, Version 2.0          | https://github.com/pypa/readme_renderer           |
+| urllib3            | 1.25.10 | MIT                                  | https://github.com/urllib3/urllib3                |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| toml               | 0.10.0  | MIT                                  | https://github.com/uiri/toml                      |
+| idna               | 2.10    | BSD-like                             | https://github.com/Khan/idna                      |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| webencodings       | 0.5.1   | BSD                                  | https://github.com/SimonSapin/python-webencodings |
+| certifi            | 2020.6.20 | MPL-2.0                            | https://github.com/certifi/python-certifi         |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-| zipp               | 0.5.1   | UNKNOWN                              | https://github.com/jaraco/zipp                    |
+| chardet            | 3.0.4   | LGPL                                 | https://github.com/chardet/chardet                |
 +--------------------+---------+--------------------------------------+---------------------------------------------------+
-
-

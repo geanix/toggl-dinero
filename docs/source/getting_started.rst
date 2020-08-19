@@ -7,8 +7,8 @@
 Getting Started
 ***************
 
-Installing the Library
-======================
+Installing the Tool
+===================
 
 You can use pip to install `toggl-dinero`.
 

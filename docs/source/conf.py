@@ -82,8 +82,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "toggl-dinero"
-copyright = "2019, esben"
-author = "Esben Haabendal"
+copyright = "2020, Geanix ApS"
+author = "Esben Haabendal <esben@geanix.com>"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -128,7 +128,7 @@ html_theme = "alabaster"
 
 html_theme_options = {
     "logo": "logo.png",
-    "github_user": "esben",
+    "github_user": "geanix",
     "github_repo": "toggl-dinero",
 }
 # fmt: off
