@@ -1,6 +1,7 @@
 """This module contains a class for providing access to Toggl API."""
 
 from toggl import TogglPy
+import logging
 
 
 class TogglAPI:
@@ -18,9 +19,19 @@ class TogglAPI:
             return None
         return client.get('id')
 
-    def workspace_id(self, name):
+    def workspace_id(self, name=None):
         """Get workspace ID."""
+        if name is None:
+            workspaces = self.api.getWorkspaces()
+            if len(workspaces) != 1:
+                logging.warning('Unable to determine workspace ID, '
+                                'Please specify workspace name')
+                return None
+            return workspaces[0]['id']
         workspace = self.api.getWorkspace(name)
+        if workspace is None:
+            logging.warning(f'Unknown workspace: {name}')
+            return None
         return workspace['id']
 
     def get_summary_report(self, data, pdf=None):
