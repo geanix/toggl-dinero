@@ -58,7 +58,7 @@ setup(
     [console_scripts]
     toggl-dinero=toggl_dinero.cli:cli
     """,
-    python_requires=">=0.0.1",
+    python_requires=">=3",
     license='MIT',  # noqa
     author='Esben Haabendal',
     author_email='esben@geanix.com',
@@ -73,23 +73,32 @@ setup(
     ],
     # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
     classifiers=[
-      # How mature is this project? Common values are
-      #   3 - Alpha
-      #   4 - Beta
-      #   5 - Production/Stable
-      'Development Status :: 3 - Alpha',
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 3 - Alpha',
 
-      # Indicate who your project is intended for.
-      'Intended Audience :: Developers',
-      'Topic :: Software Development :: Libraries',
+        # Indicate who your project is intended for.
+        'Intended Audience :: Developers',
 
-      # Pick your license.  (It should match "license" above.)
-        # noqa
-      '''License :: OSI Approved :: MIT License''',
-        # noqa
-      # Specify the Python versions you support here. In particular, ensure
-      # that you indicate whether you support Python 2, Python 3 or both.
-      'Programming Language :: Python :: 3.7',
+        # Topics that the project addresses
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Office/Business :: Financial',
+        'Topic :: Office/Business :: Financial :: Accounting',
+
+        # Pick your license.  (It should match "license" above.)
+        'License :: OSI Approved :: MIT License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+
+        # Operating systems supported
+        'Operating System :: OS Independent',
     ],
     include_package_data=True
 )
