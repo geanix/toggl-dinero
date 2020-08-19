@@ -3,6 +3,9 @@
 Create invoices in [Dinero](https://dinero.dk) from [Toggl](https://toggl.com)
 time entries.
 
+[![Build Status](https://travis-ci.org/geanix/toggl-dinero.svg?branch=master)](https://travis-ci.org/geanix/toggl-dinero)
+[![Documentation Status](https://readthedocs.org/projects/toggl-dinero/badge/?version=latest)](https://toggl-dinero.readthedocs.io/en/latest/?badge=latest)
+
 ## Project Features
 
 * [toggl-dinero](http://toggl-dinero.readthedocs.io/)
