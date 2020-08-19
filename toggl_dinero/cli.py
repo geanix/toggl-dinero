@@ -81,6 +81,13 @@ def version():
 
 
 def since_until(period):
+    """
+    Get start and end dates of a named period.
+
+    :param period: Supported values such as 'today', 'yesterday', 'this-week',
+                   and so on.
+    :return: tuple of start, end dates of period.
+    """
     today = datetime.today()
     if period == 'today':
         return today, today
@@ -138,6 +145,7 @@ def invoice(client, period, toggl_api_token, workspace,
             billable, rounding, display_hours, language,
             dinero_client_id, dinero_client_secret,
             dinero_api_key, dinero_organization):
+    """CLI invoice sub-command."""
     toggl = TogglAPI(toggl_api_token)
     client_id = toggl.client_id(client)
     workspace_id = toggl.workspace_id(workspace)
@@ -209,6 +217,7 @@ def link(toggl_client, dinero_contact,
          toggl_api_token,
          dinero_client_id, dinero_client_secret,
          dinero_api_key, dinero_organization):
+    """CLI link sub-command."""
     toggl = TogglAPI(toggl_api_token)
     dinero = DineroAPI(dinero_client_id, dinero_client_secret, dinero_api_key,
                        dinero_organization)

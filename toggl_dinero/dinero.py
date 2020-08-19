@@ -1,3 +1,5 @@
+"""This module contains a class for providing access to Dinero API."""
+
 from oauthlib.oauth2 import LegacyApplicationClient
 from requests_oauthlib import OAuth2Session
 import json
@@ -27,10 +29,19 @@ DINERO_TOKEN_URL = 'https://authz.dinero.dk/dineroapi/oauth/token'
 
 
 class DineroAPI:
+    """A connection object for accessing Dinero API."""
 
     API_URL_V1 = 'https://api.dinero.dk/v1'
 
     def __init__(self, client_id, client_secret, api_key, name=None):
+        """
+        Create a new instance.
+
+        :param client_id: Dinero client ID.
+        :param client_secret: Dinero client secret.
+        :param api_key: Dinero API key.
+        :param name: Name of organization to work/on.
+        """
         client = LegacyApplicationClient(client_id=client_id)
         oauth = OAuth2Session(client=client)
         token = oauth.fetch_token(token_url=DINERO_TOKEN_URL,
@@ -43,6 +54,11 @@ class DineroAPI:
             raise Exception('Could not set organization')
 
     def set_organization(self, name=None):
+        """Set the Dinero organization to work with/on.
+
+        :param name: Name of organization.
+
+        """
         url = f'{self.API_URL_V1}/organizations'
         params = {'fields': 'name,id'}
         orgs = self.session.get(url, params=params).json()
@@ -59,18 +75,26 @@ class DineroAPI:
         return None
 
     def get_contacts(self):
+        """Get all contacts of current organization."""
         url = f'{self.API_URL_V1}/{self.organization}/contacts'
         return self.session.get(url)
 
     def get_contact(self, contact):
+        """Get named contact of current organization."""
         url = f'{self.API_URL_V1}/{self.organization}/contacts/{contact}'
         return self.session.get(url)
 
     def update_contact(self, contact, data):
+        """
+        Update contact information in current organization.
+
+        :param contact: Contact id to change.
+        :param data: Update contact data to upload.
+        """
         url = f'{self.API_URL_V1}/{self.organization}/contacts/{contact}'
         self.session.put(url, json=data)
 
-    def get_matching_contact(self, fields, match_fn):
+    def _get_matching_contact(self, fields, match_fn):
         url = f'{self.API_URL_V1}/{self.organization}/contacts'
         params = {
             'fields': fields,
@@ -89,15 +113,26 @@ class DineroAPI:
         return None
 
     def contact_id(self, name):
+        """Get contact ID of named contact."""
         def name_match(c):
             if c['name'] == name:
                 return c['contactGuid']
             else:
                 return None
-        return self.get_matching_contact('name,contactGuid', name_match)
+        return self._get_matching_contact('name,contactGuid', name_match)
 
     def contact_with_external_reference(self, key, value):
-        def toggl_match(c):
+        """
+        Get contact ID of contact with matching ExternalReference.
+
+        The ExternalReference field is assumed to be a JSON object, and a
+        contact matches if the ExternalReference JSON object has a key/value
+        match.
+
+        :param key: Key to match.
+        :param value: Value to match.
+        """
+        def extref_match(c):
             extref = c.get('ExternalReference')
             try:
                 extref = json.loads(extref)
@@ -106,11 +141,21 @@ class DineroAPI:
             if extref.get(key) == value:
                 return c['contactGuid']
             return None
-        return self.get_matching_contact(
-            'name,contactGuid,ExternalReference', toggl_match)
+        return self._get_matching_contact(
+            'name,contactGuid,ExternalReference', extref_match)
 
     def create_invoice(self, contact, product_lines=[],
                        language=None, currency=None, comment=None, date=None):
+        """
+        Create draft invoice.
+
+        :param contact: Contact ID.
+        :param product_lines: Product lines for the invoices API.
+        :param language: Language of the invoice.
+        :param currency: Currency to use for the invoice.
+        :param comment: Comment to add to invoice.
+        :param date: Invoice date.
+        """
         url = f'{self.API_URL_V1}/{self.organization}/invoices'
         if language == 'da':
             language = 'da-DK'
