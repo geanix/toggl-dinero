@@ -138,7 +138,7 @@ class DineroAPI:
             try:
                 extref = json.loads(extref)
             except Exception as e:
-                logging.warn(f'Bad ExternalReference value: {e}')
+                logging.warn(f'Bad ExternalReference value: {e}: {extref}')
                 return None
             if extref.get(key) == value:
                 return c['contactGuid']
