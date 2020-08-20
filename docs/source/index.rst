@@ -12,6 +12,7 @@ Dinero invoicing from Toggl time entries.
    :caption: Contents:
 
    getting_started
+   usage
    development
    requirements
 
