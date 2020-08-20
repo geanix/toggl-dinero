@@ -33,6 +33,36 @@ You can create a virtual environment and install the project's dependencies usin
     make install
     source venv/bin/activate
 
+Toolbox Environment
+===================
+
+`Toolbox <https://github.com/containers/toolbox>`_ is container based method for managing development
+environments, which you might want to use instead of Python virtual environments.
+In order to use this, you need to have Toolbox and `Podman <https://podman.io/>`_ in your host OS.
+Depending on your host OS, this might require more or less effort.
+
+To create a Toolbox container for working with this project, use
+
+.. code-block:: bash
+
+    podman build -t toggl-dinero-toolbox -f Dockerfile.toolbox
+    toolbox create -i toggl-dinero-toolbox -c toggl-dinero
+
+To enter the toggl-dinero Toolbox environment, use
+
+.. code-block:: bash
+
+    toolbox enter toggl-dinero
+
+To play around with the code, you can install it in development mode, which will alow running the
+toggl-dinero command with the code just as it is.  An entry-point wrapper will be installed to
+/usr/local/bin and will use the .py files directly from the Git working copy (checkout).
+
+.. code-block:: bash
+
+    sudo python setup.py develop
+    toggl-dinero version
+
 Try It Out
 ==========
 
