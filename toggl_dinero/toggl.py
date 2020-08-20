@@ -1,6 +1,7 @@
 """This module contains a class for providing access to Toggl API."""
 
-from toggl import TogglPy
+from togglwrapper import Toggl
+import requests
 import logging
 
 
@@ -9,40 +10,54 @@ class TogglAPI:
 
     def __init__(self, api_token):
         """Create a new instance."""
-        self.api = TogglPy.Toggl()
-        self.api.setAPIKey(api_token)
+        self.api = Toggl(api_token)
+        self.reports_api = Toggl(api_token,
+                                 base_url='https://toggl.com/reports/api',
+                                 version='v2')
 
     def client_id(self, name):
         """Resolve client ID from name."""
-        client = self.api.getClient(name)
-        if client is None:
-            return None
-        return client.get('id')
+        for client in self.api.Clients.get():
+            if client['name'] == name:
+                return client['id']
+        return None
 
     def workspace_id(self, name=None):
         """Get workspace ID."""
+        workspaces = self.api.Workspaces.get()
         if name is None:
-            workspaces = self.api.getWorkspaces()
             if len(workspaces) != 1:
                 logging.warning('Unable to determine workspace ID, '
                                 'Please specify workspace name')
                 return None
             return workspaces[0]['id']
-        workspace = self.api.getWorkspace(name)
-        if workspace is None:
-            logging.warning(f'Unknown workspace: {name}')
-            return None
-        return workspace['id']
+        for workspace in workspaces:
+            if workspace['name'] == name:
+                return workspace['id']
+        logging.warning(f'Unknown workspace: {name}')
+        return None
 
-    def get_summary_report(self, data, pdf=None):
+    def summary_report(self, params):
         """
-        Fetch summary report.
+        Fetch summary report (JSON data).
 
-        :param data: Request parameters for the summary report API.
-        :param pdf: Filename to write PDF report to.
+        :param params: Request parameters for the summary report API.
         :return: Summary report data as dictionary
         """
-        report = self.api.getSummaryReport(data)
-        if pdf is not None:
-            self.api.getSummaryReportPDF(data, pdf)
-        return report
+        params.setdefault('user_agent', 'toggl-dinero')
+        return self.reports_api.get('/summary', params=params)
+
+    def summary_report_pdf(self, params):
+        """
+        Fetch summary report (PDF file).
+
+        :param params: Request parameters for the summary report API.
+        :return: Summary report PDF as bytes
+        """
+        params.setdefault('user_agent', 'toggl-dinero')
+        # togglwrapper wraps get() with a return_json fixture, so we need
+        # use requests directly
+        report = requests.get(f'{self.reports_api.api_url}/summary.pdf',
+                              params=params, auth=self.reports_api.auth)
+        report.raise_for_status()
+        return report.content

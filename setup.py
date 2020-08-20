@@ -50,7 +50,8 @@ setup(
     install_requires=[
         # Include dependencies here
         'click>=7.0,<8',
-        'TogglPy>=0.1.1',
+        'requests==2.20.0',
+        'togglwrapper>=1.2.0',
         'oauthlib>=3.1.0',
         'requests-oauthlib>=1.3.0',
     ],
