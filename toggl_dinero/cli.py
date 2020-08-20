@@ -96,11 +96,11 @@ def since_until(period):
         return yesterday, yesterday
     elif period == 'this-week':
         start_of_week = today - timedelta(days=today.weekday())
-        end_of_week = today + timedelta(day=(6-today.weekday))
+        end_of_week = today + timedelta(days=(6-today.weekday()))
         return start_of_week, end_of_week
     elif period == 'last-week':
         start_of_week = today - timedelta(days=7+today.weekday())
-        end_of_week = today + timedelta(days=(6-today.weekday)-7)
+        end_of_week = today + timedelta(days=(6-today.weekday())-7)
         return start_of_week, end_of_week
     elif period == 'this-month':
         start_of_month = today.replace(day=1)
