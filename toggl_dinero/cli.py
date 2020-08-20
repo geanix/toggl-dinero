@@ -174,6 +174,7 @@ def invoice(client, period, toggl_api_token, workspace,
         header = f'Consultancy services: {period}'
     invoice_lines.append({'Description': header, 'LineType': 'Text'})
 
+    total_hours = 0
     for project in report['data']:
         project_name = project['title']['project']
         assert len(project['total_currencies']) == 1
@@ -190,6 +191,7 @@ def invoice(client, period, toggl_api_token, workspace,
             hours = ms / (1000 * 60 * 60)
             # round to 2 decimals
             hours = int((hours * 100) + 0.5) / 100
+            total_hours += hours
             description = item['title']['time_entry']
             invoice_lines.append({
                 'Description': f"{project_name}: {description}",
@@ -198,6 +200,12 @@ def invoice(client, period, toggl_api_token, workspace,
                 'Unit': 'hours',
                 'BaseAmountValue': rate,
             })
+
+    if language == 'da':
+        header = f'I alt: {total_hours} timer'
+    else:
+        header = f'Total: {total_hours} hours'
+    invoice_lines.append({'Description': header, 'LineType': 'Text'})
 
     dinero = DineroAPI(dinero_client_id, dinero_client_secret, dinero_api_key,
                        dinero_organization)
