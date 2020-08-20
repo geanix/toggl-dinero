@@ -160,7 +160,11 @@ def invoice(client, period, toggl_api_token, workspace,
         'display_hours': display_hours,
     }
 
-    report = toggl.get_summary_report(data, f'{client}_report.pdf')
+    report = toggl.summary_report(data)
+    pdf_report = toggl.summary_report_pdf(data)
+    with open(f'{client}_report.pdf', mode='wb') as f:
+        f.write(pdf_report)
+
     invoice_currency = None
     invoice_lines = []
     period = f"{since.strftime('%Y-%m-%d')} - {until.strftime('%Y-%m-%d')}"
