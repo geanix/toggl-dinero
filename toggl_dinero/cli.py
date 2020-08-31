@@ -236,10 +236,10 @@ def link(toggl_client, dinero_contact,
     client_id = toggl.client_id(toggl_client)
     if not client_id:
         click.echo(f'Error: Toggl client not found: {toggl_client}')
-    contact_id = dinero.contact_id(dinero_organization, dinero_contact)
+    contact_id = dinero.contact_id(dinero_contact)
     if not contact_id:
         click.echo(f'Error: Dinero contact not found: {dinero_contact}')
-    contact = dinero.get_contact(dinero_organization, contact_id).json()
+    contact = dinero.get_contact(contact_id).json()
     extref = contact.get('ExternalReference')
     if extref is not None:
         extref = json.loads(extref)
@@ -247,4 +247,4 @@ def link(toggl_client, dinero_contact,
         extref = {}
     extref['toggl'] = client_id
     contact['ExternalReference'] = json.dumps(extref)
-    dinero.update_contact(dinero_organization, contact_id, contact)
+    dinero.update_contact(contact_id, contact)
