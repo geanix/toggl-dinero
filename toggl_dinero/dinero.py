@@ -33,6 +33,7 @@ class DineroAPI:
     """A connection object for accessing Dinero API."""
 
     API_URL_V1 = 'https://api.dinero.dk/v1'
+    API_URL_V1_2 = 'https://api.dinero.dk/v1.2'
 
     def __init__(self, client_id, client_secret, api_key, name=None):
         """
@@ -175,5 +176,60 @@ class DineroAPI:
         resp = self.session.post(url, json=body)
         if not resp.ok:
             print('Error: Creating invoice failed: ' +
+                  f'{resp.status_code} {resp.reason}')
+            print(resp.text)
+
+    def get_draft_invoice(self, contact):
+        """
+        Get existing draft invoice.
+
+        Exactly one draft invoice is expected to exist for the contact.  If no
+        or more than one draft voice exists for the customer, this function
+        returns None.
+
+        :param contact: Contact ID to get draft invoice for.
+        :return: Invoice data or None.
+
+        """
+        url = f'{self.API_URL_V1}/{self.organization}/invoices'
+        params = {'fields': "Guid,Date,Description",
+                  'statusFilter': 'Draft',
+                  'queryFilter': f"ContactGuid eq '{contact}'"}
+        resp = self.session.get(url, params=params)
+        if not resp.ok:
+            print('Error: Getting invoice list failed: ' +
+                  f'{resp.status_code} {resp.reason}')
+            print(resp.text)
+            return None
+        invoices = resp.json()['Collection']
+        if len(invoices) == 0:
+            print('Error: No draft invoice found')
+            return None
+        if len(invoices) > 1:
+            print('Error: Multiple draft invoices found')
+            return None
+        guid = invoices[0]['Guid']
+        url = f'{self.API_URL_V1}/{self.organization}/invoices/{guid}'
+        resp = self.session.get(url, headers={'Accept': 'application/json'})
+        if not resp.ok:
+            print('Error: Getting invoice failed: ' +
+                  f'{resp.status_code} {resp.reason}')
+            print(resp.text)
+            return None
+        invoice = resp.json()
+        return invoice
+
+    def update_invoice(self, invoice):
+        """
+        Update existing draft invoice.
+
+        :param guid: Invoice data.
+        """
+        guid = invoice['Guid']
+        # API v1 does not support Text lines, so we need to use at least v1.2
+        url = f'{self.API_URL_V1_2}/{self.organization}/invoices/{guid}'
+        resp = self.session.put(url, json=invoice)
+        if not resp.ok:
+            print('Error: Updating invoice failed: ' +
                   f'{resp.status_code} {resp.reason}')
             print(resp.text)
