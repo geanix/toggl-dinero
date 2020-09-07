@@ -141,10 +141,11 @@ def since_until(period):
 @click.option('--dinero-client-secret', envvar='DINERO_CLIENT_SECRET')
 @click.option('--dinero-api-key', envvar='DINERO_API_KEY')
 @click.option('--dinero-organization', envvar='DINERO_ORGANIZATION')
+@click.option('--update', default=False, is_flag=True)
 def invoice(client, period, toggl_api_token, workspace,
             billable, rounding, display_hours, language,
             dinero_client_id, dinero_client_secret,
-            dinero_api_key, dinero_organization):
+            dinero_api_key, dinero_organization, update):
     """CLI invoice sub-command."""
     toggl = TogglAPI(toggl_api_token)
     client_id = toggl.client_id(client)
@@ -210,12 +211,52 @@ def invoice(client, period, toggl_api_token, workspace,
 
     dinero = DineroAPI(dinero_client_id, dinero_client_secret, dinero_api_key,
                        dinero_organization)
+
     contact = dinero.contact_with_external_reference('toggl', client_id)
     if not contact:
         click.echo(f'Error: Could not find linked Dinero contact: {client_id}')
         return False
-    dinero.create_invoice(contact, invoice_lines, currency=invoice_currency,
-                          language=language)
+    if update:
+        invoice = dinero.get_draft_invoice(contact)
+        if not invoice:
+            click.echo('Error: Could not determine invoice to update')
+            return False
+        update_product_lines(invoice, invoice_lines)
+        dinero.update_invoice(invoice)
+    else:
+        dinero.create_invoice(contact, invoice_lines,
+                              currency=invoice_currency, language=language)
+
+
+def update_product_lines(invoice, invoice_lines):
+    """Update invoice with new hours product lines."""
+
+    def matching_text_line(lines, prefixes):
+        for idx, line in enumerate(lines):
+            if line['LineType'] != 'Text':
+                continue
+            for prefix in prefixes:
+                if line['Description'].startswith(prefix):
+                    return idx
+        return None
+
+    header_idx = matching_text_line(invoice['ProductLines'],
+                                    ['Konsulent ydelser: ',
+                                     'Consultancy services: '])
+    if header_idx:
+        footer_idx = matching_text_line(
+            invoice['ProductLines'][header_idx + 1:],
+            ['I alt: ', 'Total: '])
+        if footer_idx:
+            print(f'{header_idx} - {footer_idx}')
+            invoice['ProductLines'] = invoice['ProductLines'][:header_idx] \
+                + invoice_lines \
+                + invoice['ProductLines'][header_idx + footer_idx + 2:]
+        else:
+            click.echo('Warning: Could not find matching footer line')
+            invoice['ProductLines'] += invoice_lines
+    else:
+        invoice['ProductLines'] += invoice_lines
 
 
 @cli.command()
