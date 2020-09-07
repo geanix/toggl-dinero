@@ -8,5 +8,5 @@ This module contains project version information.
 .. moduleauthor:: Esben Haabendal <esben@geanix.com>
 """
 
-__version__ = "0.1.0"  #: the working version
-__release__ = "0.1.0"  #: the release version
+__version__ = "0.2.0"  #: the working version
+__release__ = "0.2.0"  #: the release version
