@@ -200,6 +200,7 @@ def invoice(client, period, toggl_api_token, workspace,
                 'Unit': 'hours',
                 'BaseAmountValue': rate,
             })
+        total_hours = int((total_hours * 100) + 0.5) / 100
 
     if language == 'da':
         header = f'I alt: {total_hours} timer'
