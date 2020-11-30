@@ -136,6 +136,8 @@ class DineroAPI:
         """
         def extref_match(c):
             extref = c.get('ExternalReference')
+            if extref is None:
+                return None
             try:
                 extref = json.loads(extref)
             except Exception as e:
