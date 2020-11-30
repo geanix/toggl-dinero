@@ -243,7 +243,7 @@ def update_product_lines(invoice, invoice_lines):
     header_idx = matching_text_line(invoice['ProductLines'],
                                     ['Konsulent ydelser: ',
                                      'Consultancy services: '])
-    if header_idx:
+    if header_idx is not None:
         footer_idx = matching_text_line(
             invoice['ProductLines'][header_idx + 1:],
             ['I alt: ', 'Total: '])
