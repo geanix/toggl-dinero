@@ -137,6 +137,7 @@ def since_until(period):
               default='decimal')
 @click.option('--language', type=click.Choice(['da', 'en']),
               default='da')
+@click.option('--toggl-user-email', envvar='TOGGL_USER_EMAIL')
 @click.option('--dinero-client-id', envvar='DINERO_CLIENT_ID')
 @click.option('--dinero-client-secret', envvar='DINERO_CLIENT_SECRET')
 @click.option('--dinero-api-key', envvar='DINERO_API_KEY')
@@ -144,7 +145,7 @@ def since_until(period):
 @click.option('--update', default=False, is_flag=True)
 def invoice(client, period, toggl_api_token, workspace,
             billable, rounding, display_hours, language,
-            dinero_client_id, dinero_client_secret,
+            toggl_user_email, dinero_client_id, dinero_client_secret,
             dinero_api_key, dinero_organization, update):
     """CLI invoice sub-command."""
     toggl = TogglAPI(toggl_api_token)
@@ -160,6 +161,10 @@ def invoice(client, period, toggl_api_token, workspace,
         'rounding': "on" if rounding else "off",
         'display_hours': display_hours,
     }
+
+    if toggl_user_email is not None:
+        user_id = toggl.user_id(workspace_id, toggl_user_email)
+        data['user_ids'] = user_id
 
     report = toggl.summary_report(data)
     pdf_report = toggl.summary_report_pdf(data)
