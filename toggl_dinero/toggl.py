@@ -22,6 +22,13 @@ class TogglAPI:
                 return client['id']
         return None
 
+    def user_id(self, workspace_id, email):
+        """Resolve user ID from email."""
+        for user in self.api.Workspaces.get_users(workspace_id):
+            if user['email'] == email:
+                return user['id']
+        return None
+
     def workspace_id(self, name=None):
         """Get workspace ID."""
         workspaces = self.api.Workspaces.get()
