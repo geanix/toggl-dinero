@@ -12,7 +12,7 @@ class TogglAPI:
         """Create a new instance."""
         self.api = Toggl(api_token)
         self.reports_api = Toggl(api_token,
-                                 base_url='https://toggl.com/reports/api',
+                                 base_url='https://api.track.toggl.com/reports/api',
                                  version='v2')
 
     def client_id(self, name):
